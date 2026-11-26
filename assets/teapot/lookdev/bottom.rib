@@ -1,6 +1,6 @@
 AttributeBegin
 Attribute "identifier" "name" ["bottom"]
 Color [0.96 0.96 0.94]
-Surface "plastic" "Ka" [0.6] "Kd" [0.8] "Ks" [0.9] "roughness" [0.015]
+Surface "plastic" "Ka" [0.6] "Kd" [0.7] "Ks" [0.3] "roughness" [0.015]
 ReadArchive "../geo/bottom.rib"
 AttributeEnd
