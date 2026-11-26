@@ -9,6 +9,7 @@ Run every command from this directory.
 
 ```sh
 make shot=full                            # next renders/full/full_vNNN.png
+make shot=museum                          # the teapot in its museum case; builds build/tex first
 make all                                  # every shot
 RENDERER=gmanraytracer make shot=full     # gmanpathtracer by default
 GMAN=/path/to/gman make shot=full         # gman on PATH by default
@@ -26,6 +27,9 @@ older than 1.3.1 or lacks the format's driver. Versions count across formats.
 | `assets/teapot/teapot.rib` | The asset's entry: every part with its look, two-sided |
 | `assets/teapot/lookdev/<part>.rib` | One part's material, bound to its geometry |
 | `assets/teapot/geo/<part>.rib` | One `PointsPolygons` of triangles with `"P"`, vertex `"N"` and `"st"` |
+| `assets/teapot/teapot_tall.rib` | The teapot at the physical teapot's height, 4/3 of Blinn's |
+| `assets/museum/museum.rib` | The museum display: cherry frame and plinth, marble border, glass lightbox, acrylic case |
+| `assets/museum/tex/` | Master TIFFs: `<map>_diff` colour, `<map>_nrm` normal (DirectX convention) |
 | `lights/studio.rib` | The light rig |
 | `shots/<shot>/shot.rib` | Camera, format, samples and what the shot reads |
 | `tools/` | `render.sh` |
@@ -58,7 +62,13 @@ holmes3d.net.
 - URL: `http://www.holmes3d.net/graphics/teapot/teapotCGA.bpt`
 - sha256: `83c3cf09ff33cff17b8de714836c4c6758fccfc4288cef8671bacf0b7c294953`
 
+The museum textures are CC0 scans from [ambientCG](https://ambientcg.com): `Marble020` for the
+border and `Wood067` for the frame, each its 2K colour and DirectX normal map converted to TIFF.
+
 ## Known gman defects
+
+- gman 1.3.1 emits light only from `Sphere` and `Disk`, so the museum's lightbox is a clear glass
+  plate over 63 upward `Disk` emitters; polygon area lights would make it one panel.
 
 - gman 1.3.1 builds nothing for `Patch`: `GMANRayObjectManager::getRSPatch` returns an empty
   primitive. The import tessellates the patches into `PointsPolygons` instead.

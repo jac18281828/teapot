@@ -1,0 +1,5 @@
+## The teapot at the physical teapot's height: the data is Blinn's, squashed to 3/4.
+AttributeBegin
+Scale 1 1.333333 1
+ReadArchive "teapot.rib"
+AttributeEnd
