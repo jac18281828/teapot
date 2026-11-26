@@ -17,7 +17,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 PORCELAIN = np.array([247, 246, 241], dtype=np.float32) / 255
-SCARLET = np.array([168, 22, 30], dtype=np.float32) / 255
+SCARLET = np.array([118, 10, 16], dtype=np.float32) / 255
+WASH = np.array([160, 28, 30], dtype=np.float32) / 255
 SUPERSAMPLE = 2
 
 
@@ -39,7 +40,7 @@ def brush_path(rng, x, y, heading, length, bend, aspect, steps=220, curl=0.0):
     return points
 
 
-def brush_outline(rng, centre, width, aspect, swell=0.35):
+def brush_outline(rng, centre, width, aspect, swell=0.9):
     pressure = smooth_noise(rng, len(centre) - 1, octaves=2)
     left, right = [], []
     n = len(centre)
@@ -50,8 +51,8 @@ def brush_outline(rng, centre, width, aspect, swell=0.35):
         length = math.hypot(dx, dy) or 1.0
         nx, ny = -dy / length, dx / length
         f = i / (n - 1)
-        body = math.sin(math.pi * min(1.0, 0.15 + f) ** 0.8) ** 0.6 * (1 - f) ** 0.7
-        w = width * max(0.0, body * (1 + swell * 0.25 * pressure[i]))
+        body = (1 - f) ** 0.9 * (1 + 0.35 * math.exp(-f * 12))
+        w = width * max(0.0, body * (1 + swell * 0.3 * pressure[i]))
         skew = 0.25 * width * pressure[i] * body
         left.append((x + nx * (w + skew) / aspect, y + ny * (w + skew)))
         right.append((x - nx * (w - skew) / aspect, y - ny * (w - skew)))
@@ -72,14 +73,14 @@ def strokes(rng, aspect):
     placed = []
     count = 9
     for k in range(count):
-        width = rng.uniform(0.03, 0.042)
+        width = rng.uniform(0.012, 0.026)
         for _ in range(60):
             s0 = (k + rng.uniform(-0.25, 0.25)) / count
             side = rng.choice((-1, 1))
-            stem = brush_path(rng, s0, rng.uniform(0.97, 1.02), -math.pi / 2 + side * rng.uniform(0.1, 0.3),
+            stem = brush_path(rng, s0, 1.0, -math.pi / 2 + side * rng.uniform(0.1, 0.3),
                               rng.uniform(0.7, 0.92), side * rng.uniform(0.2, 0.5), aspect,
                               curl=side * rng.uniform(1.4, 2.4))
-            if clear_of(stem, placed, 3.5 * width, aspect):
+            if clear_of(stem, placed, 0.1, aspect):
                 break
         else:
             continue
@@ -96,7 +97,7 @@ def strokes(rng, aspect):
                 shoot = brush_path(rng, x, y, along + side * rng.uniform(0.5, 0.9), rng.uniform(0.14, 0.26),
                                    side * rng.uniform(0.6, 1.2), aspect, steps=120,
                                    curl=side * rng.uniform(2.0, 3.5))
-                if clear_of(shoot, placed, 2.5 * width, aspect) and clear_of(shoot, own, 1.6 * width, aspect, skip=55):
+                if clear_of(shoot, placed, 0.07, aspect) and clear_of(shoot, own, 1.6 * width, aspect, skip=55):
                     shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), rng.uniform(0.75, 0.9)))
                     own += shoot[::4]
                     break
@@ -123,11 +124,14 @@ def main():
                 continue
             mask = Image.new("L", (x1 - x0, y1 - y0), 0)
             ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in pts], fill=255)
-            mask = mask.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.6))
+            mask = mask.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.9))
             a = np.asarray(mask, dtype=np.float32) / 255 * density
             region = ink[y0:y1, x0:x1]
             ink[y0:y1, x0:x1] = np.maximum(region, a)
-    colour = PORCELAIN[None, None, :] * (1 - ink[..., None]) + SCARLET[None, None, :] * ink[..., None]
+    load = np.asarray(Image.effect_noise((big_w // 64 + 1, big_h // 64 + 1), 60).resize((big_w, big_h), Image.BICUBIC),
+                      dtype=np.float32) / 255
+    paint = WASH[None, None, :] + (SCARLET - WASH)[None, None, :] * np.clip(0.35 + load, 0, 1)[..., None]
+    colour = PORCELAIN[None, None, :] * (1 - ink[..., None]) + paint * ink[..., None]
     image = Image.fromarray((np.clip(colour, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
     image = image.resize((width, height), Image.LANCZOS)
     image.save(out, compression="tiff_lzw")

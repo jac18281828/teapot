@@ -23,7 +23,7 @@ build/tex/tendrils.tif: tools/tendrils.py
 	python3 -I tools/tendrils.py $(TEXRES) $@
 
 build/tex/%.tex: build/tex/%.tif
-	printf 'MakeTexture "%s" "%s" "periodic" "periodic" "box" 1 1\n' $< $@ > build/tex/$*.rib
+	printf 'MakeTexture "%s" "%s" "periodic" "clamp" "box" 1 1\n' $< $@ > build/tex/$*.rib
 	$(GMAN) build/tex/$*.rib
 
 build/tex/%.tex: %.tif
