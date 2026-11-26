@@ -1,0 +1,8 @@
+AttributeBegin
+Sides 2
+ReadArchive "lookdev/body.rib"
+ReadArchive "lookdev/handle.rib"
+ReadArchive "lookdev/spout.rib"
+ReadArchive "lookdev/lid.rib"
+ReadArchive "lookdev/bottom.rib"
+AttributeEnd
