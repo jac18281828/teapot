@@ -3,8 +3,8 @@
 usage: python3 -I tools/tendrils.py WIDTH OUT.tif
 
 Stems rise from the foot, lean a little around the body and thin to a point, with an occasional
-side shoot and leaf dab; each stroke swells and thins like a loaded brush, and its ink pools where
-strokes cross. The design is vector strokes from a fixed seed, so it rasterizes sharp at any
+side shoot; each stroke swells and thins like a loaded brush, and no stroke crosses another. The
+design is vector strokes from a fixed seed, so it rasterizes sharp at any
 WIDTH; the height is WIDTH / 4, matching the body's cylindrical map (s around the body, seam at the
 handle; t from the rim at 0 to the foot at 1). Strokes wrap in s, so the seam is invisible.
 """
@@ -58,33 +58,49 @@ def brush_outline(rng, centre, width, aspect, swell=0.35):
     return left + right[::-1]
 
 
+def clear_of(path, others, margin, aspect, skip=0):
+    for x, y in path[skip::4]:
+        for ox, oy in others:
+            for wrap in (-1.0, 0.0, 1.0):
+                if math.hypot((x - ox + wrap) * aspect, y - oy) < margin:
+                    return False
+    return True
+
+
 def strokes(rng, aspect):
     shapes = []
-    count = 7
-    starts = [(k + rng.uniform(-0.25, 0.25)) / count for k in range(count)]
-    for s0 in starts:
+    placed = []
+    count = 9
+    for k in range(count):
         width = rng.uniform(0.03, 0.042)
-        side = rng.choice((-1, 1))
-        stem = brush_path(rng, s0, rng.uniform(0.97, 1.02), -math.pi / 2 + side * rng.uniform(0.1, 0.3),
-                          rng.uniform(0.7, 0.92), side * rng.uniform(0.2, 0.5), aspect,
-                          curl=side * rng.uniform(1.4, 2.4))
-        shapes.append((brush_outline(rng, stem, width, aspect), rng.uniform(0.82, 0.95)))
-        for _ in range(rng.randint(1, 2)):
-            j = rng.randrange(len(stem) // 4, int(len(stem) * 0.7))
-            x, y = stem[j]
-            xa, ya = stem[j - 2]
-            xb, yb = stem[j + 2]
-            along = math.atan2(yb - ya, (xb - xa) * aspect)
+        for _ in range(60):
+            s0 = (k + rng.uniform(-0.25, 0.25)) / count
             side = rng.choice((-1, 1))
-            shoot = brush_path(rng, x, y, along + side * rng.uniform(0.5, 0.9), rng.uniform(0.14, 0.26),
-                               side * rng.uniform(0.6, 1.2), aspect, steps=120, curl=side * rng.uniform(2.0, 3.5))
-            shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), rng.uniform(0.75, 0.9)))
-        for _ in range(rng.randint(1, 3)):
-            j = rng.randrange(len(stem) // 5, int(len(stem) * 0.85))
-            x, y = stem[j]
-            dab = brush_path(rng, x, y, -math.pi / 2 + rng.choice((-1, 1)) * rng.uniform(0.7, 1.3),
-                             rng.uniform(0.05, 0.08), rng.uniform(-0.6, 0.6), aspect, steps=60)
-            shapes.append((brush_outline(rng, dab, width * 1.1, aspect, swell=0.6), rng.uniform(0.7, 0.9)))
+            stem = brush_path(rng, s0, rng.uniform(0.97, 1.02), -math.pi / 2 + side * rng.uniform(0.1, 0.3),
+                              rng.uniform(0.7, 0.92), side * rng.uniform(0.2, 0.5), aspect,
+                              curl=side * rng.uniform(1.4, 2.4))
+            if clear_of(stem, placed, 3.5 * width, aspect):
+                break
+        else:
+            continue
+        shapes.append((brush_outline(rng, stem, width, aspect), rng.uniform(0.82, 0.95)))
+        own = list(stem[::4])
+        for _ in range(rng.randint(1, 2)):
+            for _ in range(30):
+                j = rng.randrange(len(stem) // 4, int(len(stem) * 0.7))
+                x, y = stem[j]
+                xa, ya = stem[j - 2]
+                xb, yb = stem[j + 2]
+                along = math.atan2(yb - ya, (xb - xa) * aspect)
+                side = rng.choice((-1, 1))
+                shoot = brush_path(rng, x, y, along + side * rng.uniform(0.5, 0.9), rng.uniform(0.14, 0.26),
+                                   side * rng.uniform(0.6, 1.2), aspect, steps=120,
+                                   curl=side * rng.uniform(2.0, 3.5))
+                if clear_of(shoot, placed, 2.5 * width, aspect) and clear_of(shoot, own, 1.6 * width, aspect, skip=55):
+                    shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), rng.uniform(0.75, 0.9)))
+                    own += shoot[::4]
+                    break
+        placed += own
     return shapes
 
 
@@ -110,10 +126,9 @@ def main():
             mask = mask.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.6))
             a = np.asarray(mask, dtype=np.float32) / 255 * density
             region = ink[y0:y1, x0:x1]
-            ink[y0:y1, x0:x1] = 1 - (1 - region) * (1 - a)
+            ink[y0:y1, x0:x1] = np.maximum(region, a)
     colour = PORCELAIN[None, None, :] * (1 - ink[..., None]) + SCARLET[None, None, :] * ink[..., None]
-    pooled = colour * (1 - 1.8 * np.clip(ink - 0.9, 0, 0.1)[..., None])
-    image = Image.fromarray((np.clip(pooled, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
+    image = Image.fromarray((np.clip(colour, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
     image = image.resize((width, height), Image.LANCZOS)
     image.save(out, compression="tiff_lzw")
 
