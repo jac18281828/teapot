@@ -29,7 +29,7 @@ older than 1.3.1 or lacks the format's driver. Versions count across formats.
 | `assets/teapot/geo/<part>.rib` | One `PointsPolygons` of triangles with `"P"`, vertex `"N"` and `"st"` |
 | `assets/teapot/teapot_tall.rib` | The teapot at the physical teapot's height, 4/3 of Blinn's |
 | `assets/museum/museum.rib` | The museum display: cherry frame and plinth, marble border, glass lightbox, acrylic case and its rail |
-| `assets/museum/room.rib` | The clay wall behind the case and a soft panel behind the camera for the glass to reflect |
+| `assets/museum/room.rib` | The navy wall behind the case and a soft panel behind the camera for the glass to reflect |
 | `assets/museum/tex/` | Master TIFFs: `<map>_diff` colour, `<map>_nrm` normal (DirectX convention) |
 | `lights/studio.rib` | The light rig |
 | `shots/<shot>/shot.rib` | Camera, format, samples and what the shot reads |

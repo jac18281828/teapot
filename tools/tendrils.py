@@ -60,6 +60,7 @@ def brush_outline(rng, centre, width, aspect, swell=0.9):
 
 
 FRONT = 0.25
+HIDDEN = frozenset({1, 7})
 
 COMPOSITION = (
     (FRONT - 0.035, 0.86, 0.32, 2.0, 0.024, 0.0, ((0.42, -1),)),
@@ -75,9 +76,10 @@ COMPOSITION = (
 
 def strokes(rng, aspect):
     shapes = []
-    for s0, length, lean, curl, width, depth, shoots in COMPOSITION:
+    for index, (s0, length, lean, curl, width, depth, shoots) in enumerate(COMPOSITION):
+        drawn = []
         stem = brush_path(rng, s0, 1.0, -math.pi / 2 + lean * 0.4, length, lean, aspect, curl=curl)
-        shapes.append((brush_outline(rng, stem, width, aspect), depth))
+        drawn.append((brush_outline(rng, stem, width, aspect), depth))
         for at, side in shoots:
             j = int(len(stem) * at)
             x, y = stem[j]
@@ -86,7 +88,9 @@ def strokes(rng, aspect):
             along = math.atan2(yb - ya, (xb - xa) * aspect)
             shoot = brush_path(rng, x, y, along + side * 0.75, length * 0.3, side * 0.9, aspect, steps=120,
                                curl=side * 2.6)
-            shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), depth))
+            drawn.append((brush_outline(rng, shoot, width * 0.6, aspect), depth))
+        if index not in HIDDEN:
+            shapes.extend(drawn)
     return sorted(shapes, key=lambda shape: -shape[1])
 
 

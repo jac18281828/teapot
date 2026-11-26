@@ -1,4 +1,4 @@
-## The room: a clay wall behind the case and a soft panel behind the camera for the glass to reflect.
+## The room: a navy wall behind the case and a soft panel behind the camera for the glass to reflect.
 AttributeBegin
 Surface "matte" "Kd" [0]
 AreaLightSource "arealight" 210 "intensity" [0.6] "lightcolor" [1 0.98 0.95]
@@ -6,6 +6,6 @@ Polygon "P" [-30 -8 -30  30 -8 -30  30 22 -30  -30 22 -30]
 AttributeEnd
 AttributeBegin
 Surface "matte" "Kd" [0]
-AreaLightSource "arealight" 200 "intensity" [1.0] "lightcolor" [0.42 0.16 0.12]
+AreaLightSource "arealight" 200 "intensity" [1.0] "lightcolor" [0.06 0.09 0.22]
 Polygon "P" [-40 -6 9  -40 30 9  40 30 9  40 -6 9]
 AttributeEnd
