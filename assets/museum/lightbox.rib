@@ -1,4 +1,5 @@
-## The lit floor: a clear glass plate over one upward polygon emitter in a white tray.
+## The lit floor: a clear glass plate over a 9 by 7 grid of upward polygon emitters in a white tray.
+## Each tile's radiance falls from the centre to 40% at the corners, like a real panel's.
 ## The panel needs gman with polygon area lights (main at 86ef3c1 or later).
 AttributeBegin
 Surface "glass"
@@ -16,8 +17,317 @@ Sides 2
 Polygon "P" [-4.2 -0.5 -3.2 4.2 -0.5 -3.2 4.2 -0.5 3.2 -4.2 -0.5 3.2] "N" [0 1 0 0 1 0 0 1 0 0 1 0]
 AttributeEnd
 AttributeBegin
-## A black surface keeps the emitter from reflecting the overhead light.
 Surface "matte" "Kd" [0]
-AreaLightSource "arealight" 101 "intensity" [1.25] "lightcolor" [0.96 0.98 1]
-Polygon "P" [-4.2 -0.3 -3.2  -4.2 -0.3 3.2  4.2 -0.3 3.2  4.2 -0.3 -3.2]
+AreaLightSource "arealight" 1001 "intensity" [0.678] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 -3.2  -4.2 -0.3 -2.28571  -3.26667 -0.3 -2.28571  -3.26667 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1002 "intensity" [0.831] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 -2.28571  -4.2 -0.3 -1.37143  -3.26667 -0.3 -1.37143  -3.26667 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1003 "intensity" [0.923] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 -1.37143  -4.2 -0.3 -0.457143  -3.26667 -0.3 -0.457143  -3.26667 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1004 "intensity" [0.954] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 -0.457143  -4.2 -0.3 0.457143  -3.26667 -0.3 0.457143  -3.26667 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1005 "intensity" [0.923] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 0.457143  -4.2 -0.3 1.37143  -3.26667 -0.3 1.37143  -3.26667 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1006 "intensity" [0.831] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 1.37143  -4.2 -0.3 2.28571  -3.26667 -0.3 2.28571  -3.26667 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1007 "intensity" [0.678] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-4.2 -0.3 2.28571  -4.2 -0.3 3.2  -3.26667 -0.3 3.2  -3.26667 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1008 "intensity" [0.808] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 -3.2  -3.26667 -0.3 -2.28571  -2.33333 -0.3 -2.28571  -2.33333 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1009 "intensity" [0.961] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 -2.28571  -3.26667 -0.3 -1.37143  -2.33333 -0.3 -1.37143  -2.33333 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1010 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 -1.37143  -3.26667 -0.3 -0.457143  -2.33333 -0.3 -0.457143  -2.33333 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1011 "intensity" [1.083] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 -0.457143  -3.26667 -0.3 0.457143  -2.33333 -0.3 0.457143  -2.33333 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1012 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 0.457143  -3.26667 -0.3 1.37143  -2.33333 -0.3 1.37143  -2.33333 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1013 "intensity" [0.961] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 1.37143  -3.26667 -0.3 2.28571  -2.33333 -0.3 2.28571  -2.33333 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1014 "intensity" [0.808] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-3.26667 -0.3 2.28571  -3.26667 -0.3 3.2  -2.33333 -0.3 3.2  -2.33333 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1015 "intensity" [0.900] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 -3.2  -2.33333 -0.3 -2.28571  -1.4 -0.3 -2.28571  -1.4 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1016 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 -2.28571  -2.33333 -0.3 -1.37143  -1.4 -0.3 -1.37143  -1.4 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1017 "intensity" [1.145] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 -1.37143  -2.33333 -0.3 -0.457143  -1.4 -0.3 -0.457143  -1.4 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1018 "intensity" [1.176] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 -0.457143  -2.33333 -0.3 0.457143  -1.4 -0.3 0.457143  -1.4 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1019 "intensity" [1.145] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 0.457143  -2.33333 -0.3 1.37143  -1.4 -0.3 1.37143  -1.4 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1020 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 1.37143  -2.33333 -0.3 2.28571  -1.4 -0.3 2.28571  -1.4 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1021 "intensity" [0.900] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-2.33333 -0.3 2.28571  -2.33333 -0.3 3.2  -1.4 -0.3 3.2  -1.4 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1022 "intensity" [0.956] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 -3.2  -1.4 -0.3 -2.28571  -0.466667 -0.3 -2.28571  -0.466667 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1023 "intensity" [1.109] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 -2.28571  -1.4 -0.3 -1.37143  -0.466667 -0.3 -1.37143  -0.466667 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1024 "intensity" [1.201] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 -1.37143  -1.4 -0.3 -0.457143  -0.466667 -0.3 -0.457143  -0.466667 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1025 "intensity" [1.231] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 -0.457143  -1.4 -0.3 0.457143  -0.466667 -0.3 0.457143  -0.466667 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1026 "intensity" [1.201] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 0.457143  -1.4 -0.3 1.37143  -0.466667 -0.3 1.37143  -0.466667 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1027 "intensity" [1.109] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 1.37143  -1.4 -0.3 2.28571  -0.466667 -0.3 2.28571  -0.466667 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1028 "intensity" [0.956] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-1.4 -0.3 2.28571  -1.4 -0.3 3.2  -0.466667 -0.3 3.2  -0.466667 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1029 "intensity" [0.974] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 -3.2  -0.466667 -0.3 -2.28571  0.466667 -0.3 -2.28571  0.466667 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1030 "intensity" [1.128] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 -2.28571  -0.466667 -0.3 -1.37143  0.466667 -0.3 -1.37143  0.466667 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1031 "intensity" [1.219] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 -1.37143  -0.466667 -0.3 -0.457143  0.466667 -0.3 -0.457143  0.466667 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1032 "intensity" [1.250] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 -0.457143  -0.466667 -0.3 0.457143  0.466667 -0.3 0.457143  0.466667 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1033 "intensity" [1.219] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 0.457143  -0.466667 -0.3 1.37143  0.466667 -0.3 1.37143  0.466667 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1034 "intensity" [1.128] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 1.37143  -0.466667 -0.3 2.28571  0.466667 -0.3 2.28571  0.466667 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1035 "intensity" [0.974] "lightcolor" [0.96 0.98 1]
+Polygon "P" [-0.466667 -0.3 2.28571  -0.466667 -0.3 3.2  0.466667 -0.3 3.2  0.466667 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1036 "intensity" [0.956] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 -3.2  0.466667 -0.3 -2.28571  1.4 -0.3 -2.28571  1.4 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1037 "intensity" [1.109] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 -2.28571  0.466667 -0.3 -1.37143  1.4 -0.3 -1.37143  1.4 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1038 "intensity" [1.201] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 -1.37143  0.466667 -0.3 -0.457143  1.4 -0.3 -0.457143  1.4 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1039 "intensity" [1.231] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 -0.457143  0.466667 -0.3 0.457143  1.4 -0.3 0.457143  1.4 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1040 "intensity" [1.201] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 0.457143  0.466667 -0.3 1.37143  1.4 -0.3 1.37143  1.4 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1041 "intensity" [1.109] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 1.37143  0.466667 -0.3 2.28571  1.4 -0.3 2.28571  1.4 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1042 "intensity" [0.956] "lightcolor" [0.96 0.98 1]
+Polygon "P" [0.466667 -0.3 2.28571  0.466667 -0.3 3.2  1.4 -0.3 3.2  1.4 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1043 "intensity" [0.900] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 -3.2  1.4 -0.3 -2.28571  2.33333 -0.3 -2.28571  2.33333 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1044 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 -2.28571  1.4 -0.3 -1.37143  2.33333 -0.3 -1.37143  2.33333 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1045 "intensity" [1.145] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 -1.37143  1.4 -0.3 -0.457143  2.33333 -0.3 -0.457143  2.33333 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1046 "intensity" [1.176] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 -0.457143  1.4 -0.3 0.457143  2.33333 -0.3 0.457143  2.33333 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1047 "intensity" [1.145] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 0.457143  1.4 -0.3 1.37143  2.33333 -0.3 1.37143  2.33333 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1048 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 1.37143  1.4 -0.3 2.28571  2.33333 -0.3 2.28571  2.33333 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1049 "intensity" [0.900] "lightcolor" [0.96 0.98 1]
+Polygon "P" [1.4 -0.3 2.28571  1.4 -0.3 3.2  2.33333 -0.3 3.2  2.33333 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1050 "intensity" [0.808] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 -3.2  2.33333 -0.3 -2.28571  3.26667 -0.3 -2.28571  3.26667 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1051 "intensity" [0.961] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 -2.28571  2.33333 -0.3 -1.37143  3.26667 -0.3 -1.37143  3.26667 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1052 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 -1.37143  2.33333 -0.3 -0.457143  3.26667 -0.3 -0.457143  3.26667 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1053 "intensity" [1.083] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 -0.457143  2.33333 -0.3 0.457143  3.26667 -0.3 0.457143  3.26667 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1054 "intensity" [1.053] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 0.457143  2.33333 -0.3 1.37143  3.26667 -0.3 1.37143  3.26667 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1055 "intensity" [0.961] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 1.37143  2.33333 -0.3 2.28571  3.26667 -0.3 2.28571  3.26667 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1056 "intensity" [0.808] "lightcolor" [0.96 0.98 1]
+Polygon "P" [2.33333 -0.3 2.28571  2.33333 -0.3 3.2  3.26667 -0.3 3.2  3.26667 -0.3 2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1057 "intensity" [0.678] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 -3.2  3.26667 -0.3 -2.28571  4.2 -0.3 -2.28571  4.2 -0.3 -3.2]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1058 "intensity" [0.831] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 -2.28571  3.26667 -0.3 -1.37143  4.2 -0.3 -1.37143  4.2 -0.3 -2.28571]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1059 "intensity" [0.923] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 -1.37143  3.26667 -0.3 -0.457143  4.2 -0.3 -0.457143  4.2 -0.3 -1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1060 "intensity" [0.954] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 -0.457143  3.26667 -0.3 0.457143  4.2 -0.3 0.457143  4.2 -0.3 -0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1061 "intensity" [0.923] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 0.457143  3.26667 -0.3 1.37143  4.2 -0.3 1.37143  4.2 -0.3 0.457143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1062 "intensity" [0.831] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 1.37143  3.26667 -0.3 2.28571  4.2 -0.3 2.28571  4.2 -0.3 1.37143]
+AttributeEnd
+AttributeBegin
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 1063 "intensity" [0.678] "lightcolor" [0.96 0.98 1]
+Polygon "P" [3.26667 -0.3 2.28571  3.26667 -0.3 3.2  4.2 -0.3 3.2  4.2 -0.3 2.28571]
 AttributeEnd
