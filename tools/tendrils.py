@@ -1,37 +1,46 @@
-"""Paint the teapot body's glaze: scarlet hand-painted tendrils on white porcelain.
+"""Paint the teapot body's glaze: a few scarlet brush-painted tendrils on white porcelain.
 
 usage: python3 -I tools/tendrils.py WIDTH OUT.tif
 
-The design is vector strokes from a fixed seed, so it rasterizes sharp at any WIDTH; the height is
-WIDTH / 4, matching the body's cylindrical map (s around the body, seam at the handle; t from the
-rim at the top to the foot at the bottom). Strokes wrap in s, so the seam is invisible.
+Stems rise from the foot, lean a little around the body and thin to a point, with an occasional
+side shoot and leaf dab; each stroke swells and thins like a loaded brush, and its ink pools where
+strokes cross. The design is vector strokes from a fixed seed, so it rasterizes sharp at any
+WIDTH; the height is WIDTH / 4, matching the body's cylindrical map (s around the body, seam at the
+handle; t from the rim at 0 to the foot at 1). Strokes wrap in s, so the seam is invisible.
 """
 
 import math
 import random
 import sys
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-PORCELAIN = (247, 246, 241)
-SCARLET = (176, 18, 26)
+PORCELAIN = np.array([247, 246, 241], dtype=np.float32) / 255
+SCARLET = np.array([168, 22, 30], dtype=np.float32) / 255
 SUPERSAMPLE = 2
 
 
-def vine_path(rng, phase, base, amp):
-    k1 = rng.choice((2, 3))
-    k2 = k1 * 2 + rng.choice((1, 3))
-    a2 = amp * rng.uniform(0.15, 0.3)
-    p2 = rng.uniform(0, 2 * math.pi)
+def smooth_noise(rng, n, octaves=3):
+    phases = [(rng.uniform(1, 3) * 2 ** o, rng.uniform(0, 2 * math.pi), 0.5 ** o) for o in range(octaves)]
+    return [sum(a * math.sin(f * math.pi * i / n + p) for f, p, a in phases) for i in range(n + 1)]
+
+
+def brush_path(rng, x, y, heading, length, bend, aspect, steps=220, curl=0.0):
+    wobble = smooth_noise(rng, steps)
     points = []
-    for i in range(1601):
-        s = i / 1600
-        t = base + amp * math.sin(2 * math.pi * k1 * s + phase) + a2 * math.sin(2 * math.pi * k2 * s + p2)
-        points.append((s, t))
+    for i in range(steps + 1):
+        f = i / steps
+        points.append((x, y))
+        a = heading + bend * f * f + curl * f ** 4 + 0.06 * wobble[i]
+        step = length / steps
+        x += math.cos(a) * step / aspect
+        y += math.sin(a) * step
     return points
 
 
-def tapered_outline(centre, w0, w1, aspect):
+def brush_outline(rng, centre, width, aspect, swell=0.35):
+    pressure = smooth_noise(rng, len(centre) - 1, octaves=2)
     left, right = [], []
     n = len(centre)
     for i, (x, y) in enumerate(centre):
@@ -41,59 +50,41 @@ def tapered_outline(centre, w0, w1, aspect):
         length = math.hypot(dx, dy) or 1.0
         nx, ny = -dy / length, dx / length
         f = i / (n - 1)
-        w = (w0 + (w1 - w0) * f) * (0.85 + 0.15 * math.sin(f * 9.0))
-        left.append((x + nx * w / aspect, y + ny * w))
-        right.append((x - nx * w / aspect, y - ny * w))
+        body = math.sin(math.pi * min(1.0, 0.15 + f) ** 0.8) ** 0.6 * (1 - f) ** 0.7
+        w = width * max(0.0, body * (1 + swell * 0.25 * pressure[i]))
+        skew = 0.25 * width * pressure[i] * body
+        left.append((x + nx * (w + skew) / aspect, y + ny * (w + skew)))
+        right.append((x - nx * (w - skew) / aspect, y - ny * (w - skew)))
     return left + right[::-1]
-
-
-def curl(rng, x, y, heading, size, turns, aspect):
-    direction = rng.choice((-1, 1))
-    points = []
-    steps = 140
-    for i in range(steps + 1):
-        f = i / steps
-        a = heading + direction * turns * 2 * math.pi * f
-        r = size * (1 - f) ** 1.4
-        points.append((x, y))
-        x += math.cos(a) * r * 0.005 / aspect
-        y += math.sin(a) * r * 0.005
-    return points
-
-
-def leaf(x, y, heading, length, width, aspect):
-    points = []
-    for i in range(41):
-        f = i / 40
-        along = length * f
-        half = width * math.sin(math.pi * f) ** 1.3
-        points.append((along, half))
-    outline = points + [(a, -h) for a, h in reversed(points)]
-    c, s = math.cos(heading), math.sin(heading)
-    return [(x + (a * c - h * s) / aspect, y + (a * s + h * c)) for a, h in outline]
 
 
 def strokes(rng, aspect):
     shapes = []
-    for base, amp, w in ((0.30, 0.07, 0.0030), (0.52, 0.09, 0.0036), (0.74, 0.06, 0.0027)):
-        path = vine_path(rng, rng.uniform(0, 2 * math.pi), base, amp)
-        for k in range(0, len(path) - 1, 200):
-            segment = path[k:k + 201]
-            shapes.append(tapered_outline(segment, w, w * 0.9, aspect))
-        for _ in range(rng.randint(24, 32)):
-            i = rng.randrange(5, len(path) - 5)
-            x, y = path[i]
-            xa, ya = path[i - 3]
-            xb, yb = path[i + 3]
-            heading = math.atan2(yb - ya, (xb - xa) * aspect) + rng.choice((-1, 1)) * rng.uniform(0.6, 1.3)
-            size = rng.uniform(0.6, 1.1)
-            tendril = curl(rng, x, y, heading, size, rng.uniform(1.2, 2.2), aspect)
-            shapes.append(tapered_outline(tendril, w * 0.6, 0.0002, aspect))
-            for _ in range(rng.randint(0, 2)):
-                j = rng.randrange(10, len(tendril) // 2)
-                lx, ly = tendril[j]
-                shapes.append(leaf(lx, ly, heading + rng.uniform(-1.8, 1.8), rng.uniform(0.04, 0.07),
-                                   rng.uniform(0.005, 0.008), aspect))
+    count = 7
+    starts = [(k + rng.uniform(-0.25, 0.25)) / count for k in range(count)]
+    for s0 in starts:
+        width = rng.uniform(0.03, 0.042)
+        side = rng.choice((-1, 1))
+        stem = brush_path(rng, s0, rng.uniform(0.97, 1.02), -math.pi / 2 + side * rng.uniform(0.1, 0.3),
+                          rng.uniform(0.7, 0.92), side * rng.uniform(0.2, 0.5), aspect,
+                          curl=side * rng.uniform(1.4, 2.4))
+        shapes.append((brush_outline(rng, stem, width, aspect), rng.uniform(0.82, 0.95)))
+        for _ in range(rng.randint(1, 2)):
+            j = rng.randrange(len(stem) // 4, int(len(stem) * 0.7))
+            x, y = stem[j]
+            xa, ya = stem[j - 2]
+            xb, yb = stem[j + 2]
+            along = math.atan2(yb - ya, (xb - xa) * aspect)
+            side = rng.choice((-1, 1))
+            shoot = brush_path(rng, x, y, along + side * rng.uniform(0.5, 0.9), rng.uniform(0.14, 0.26),
+                               side * rng.uniform(0.6, 1.2), aspect, steps=120, curl=side * rng.uniform(2.0, 3.5))
+            shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), rng.uniform(0.75, 0.9)))
+        for _ in range(rng.randint(1, 3)):
+            j = rng.randrange(len(stem) // 5, int(len(stem) * 0.85))
+            x, y = stem[j]
+            dab = brush_path(rng, x, y, -math.pi / 2 + rng.choice((-1, 1)) * rng.uniform(0.7, 1.3),
+                             rng.uniform(0.05, 0.08), rng.uniform(-0.6, 0.6), aspect, steps=60)
+            shapes.append((brush_outline(rng, dab, width * 1.1, aspect, swell=0.6), rng.uniform(0.7, 0.9)))
     return shapes
 
 
@@ -103,13 +94,26 @@ def main():
     height = width // 4
     aspect = width / height
     big_w, big_h = width * SUPERSAMPLE, height * SUPERSAMPLE
-    image = Image.new("RGB", (big_w, big_h), PORCELAIN)
-    draw = ImageDraw.Draw(image)
     rng = random.Random(1975)
-    for shape in strokes(rng, aspect):
+    ink = np.zeros((big_h, big_w), dtype=np.float32)
+    for shape, density in strokes(rng, aspect):
         for offset in (-1.0, 0.0, 1.0):
-            draw.polygon([((x + offset) * big_w, y * big_h) for x, y in shape], fill=SCARLET)
-    image = image.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.35))
+            pts = [((x + offset) * big_w, y * big_h) for x, y in shape]
+            x0 = max(int(min(p[0] for p in pts)) - 4, 0)
+            x1 = min(int(max(p[0] for p in pts)) + 5, big_w)
+            y0 = max(int(min(p[1] for p in pts)) - 4, 0)
+            y1 = min(int(max(p[1] for p in pts)) + 5, big_h)
+            if x1 <= x0 or y1 <= y0:
+                continue
+            mask = Image.new("L", (x1 - x0, y1 - y0), 0)
+            ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in pts], fill=255)
+            mask = mask.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.6))
+            a = np.asarray(mask, dtype=np.float32) / 255 * density
+            region = ink[y0:y1, x0:x1]
+            ink[y0:y1, x0:x1] = 1 - (1 - region) * (1 - a)
+    colour = PORCELAIN[None, None, :] * (1 - ink[..., None]) + SCARLET[None, None, :] * ink[..., None]
+    pooled = colour * (1 - 1.8 * np.clip(ink - 0.9, 0, 0.1)[..., None])
+    image = Image.fromarray((np.clip(pooled, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
     image = image.resize((width, height), Image.LANCZOS)
     image.save(out, compression="tiff_lzw")
 
