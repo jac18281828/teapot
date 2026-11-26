@@ -16,6 +16,8 @@ Sides 2
 Polygon "P" [-4.2 -0.5 -3.2 4.2 -0.5 -3.2 4.2 -0.5 3.2 -4.2 -0.5 3.2] "N" [0 1 0 0 1 0 0 1 0 0 1 0]
 AttributeEnd
 AttributeBegin
-AreaLightSource "arealight" 101 "intensity" [1.804] "lightcolor" [0.96 0.98 1]
+## A black surface keeps the emitter from reflecting the overhead light.
+Surface "matte" "Kd" [0]
+AreaLightSource "arealight" 101 "intensity" [0.6] "lightcolor" [0.96 0.98 1]
 Polygon "P" [-4.2 -0.3 -3.2  -4.2 -0.3 3.2  4.2 -0.3 3.2  4.2 -0.3 -3.2]
 AttributeEnd

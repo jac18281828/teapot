@@ -28,7 +28,8 @@ older than 1.3.1 or lacks the format's driver. Versions count across formats.
 | `assets/teapot/lookdev/<part>.rib` | One part's material, bound to its geometry |
 | `assets/teapot/geo/<part>.rib` | One `PointsPolygons` of triangles with `"P"`, vertex `"N"` and `"st"` |
 | `assets/teapot/teapot_tall.rib` | The teapot at the physical teapot's height, 4/3 of Blinn's |
-| `assets/museum/museum.rib` | The museum display: cherry frame and plinth, marble border, glass lightbox, acrylic case |
+| `assets/museum/museum.rib` | The museum display: cherry frame and plinth, marble border, glass lightbox, acrylic case and its rail |
+| `assets/museum/room.rib` | The clay wall behind the case and a soft panel behind the camera for the glass to reflect |
 | `assets/museum/tex/` | Master TIFFs: `<map>_diff` colour, `<map>_nrm` normal (DirectX convention) |
 | `lights/studio.rib` | The light rig |
 | `shots/<shot>/shot.rib` | Camera, format, samples and what the shot reads |
@@ -68,7 +69,8 @@ border and `Wood067` for the frame, each its 2K colour and DirectX normal map co
 ## Known gman defects
 
 - gman 1.3.1 emits light only from `Sphere` and `Disk`. The museum's lightbox is one polygon area
-  light, which needs gman `main` at `86ef3c1` or later until the next release. 1.3.1 skips the
+  light, which needs gman `main` at `86ef3c1` or later until the next release; the ray tracer lights
+  from area emitters from `c3d424f`. 1.3.1 skips the
   panel with a warning, `area-light primitive(s) are ineligible or unsupported`, and renders the
   floor unlit; `tools/render.sh` passes either build, since its floor is 1.3.1.
 

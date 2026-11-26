@@ -1,8 +1,9 @@
-## The museum case: cherry frame and plinth, marble border, lightbox and acrylic vitrine.
+## The museum case: cherry frame and plinth, marble border, lightbox, acrylic vitrine and its rail.
 AttributeBegin
 Sides 2
 ReadArchive "plinth.rib"
 ReadArchive "border.rib"
 ReadArchive "lightbox.rib"
 ReadArchive "vitrine.rib"
+ReadArchive "rail.rib"
 AttributeEnd
