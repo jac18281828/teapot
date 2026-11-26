@@ -67,8 +67,10 @@ border and `Wood067` for the frame, each its 2K colour and DirectX normal map co
 
 ## Known gman defects
 
-- gman 1.3.1 emits light only from `Sphere` and `Disk`, so the museum's lightbox is a clear glass
-  plate over 63 upward `Disk` emitters; polygon area lights would make it one panel.
+- gman 1.3.1 emits light only from `Sphere` and `Disk`. The museum's lightbox is one polygon area
+  light, which needs gman `main` at `86ef3c1` or later until the next release. 1.3.1 skips the
+  panel with a warning, `area-light primitive(s) are ineligible or unsupported`, and renders the
+  floor unlit; `tools/render.sh` passes either build, since its floor is 1.3.1.
 
 - gman 1.3.1 builds nothing for `Patch`: `GMANRayObjectManager::getRSPatch` returns an empty
   primitive. The import tessellates the patches into `PointsPolygons` instead.
