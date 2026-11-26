@@ -2,10 +2,10 @@
 
 usage: python3 -I tools/tendrils.py WIDTH OUT.tif
 
-Stems rise from the foot, lean a little around the body and thin to a point, with an occasional
-side shoot; each stroke swells and thins like a loaded brush, and no stroke crosses another. The
-design is vector strokes from a fixed seed, so it rasterizes sharp at any
-WIDTH; the height is WIDTH / 4, matching the body's cylindrical map (s around the body, seam at the
+A composed handful of stems rise from the foot around the body's front, FRONT: a tall one pulled
+well up, others pulled less far, the farther ones paler and finer so they sit behind. Each
+stroke swells and thins like a loaded brush, with a side shoot here and there. The design is
+vector strokes, so it rasterizes sharp at any WIDTH; the height is WIDTH / 4, matching the body's cylindrical map (s around the body, seam at the
 handle; t from the rim at 0 to the foot at 1). Strokes wrap in s, so the seam is invisible.
 """
 
@@ -59,50 +59,33 @@ def brush_outline(rng, centre, width, aspect, swell=0.9):
     return left + right[::-1]
 
 
-def clear_of(path, others, margin, aspect, skip=0):
-    for x, y in path[skip::4]:
-        for ox, oy in others:
-            for wrap in (-1.0, 0.0, 1.0):
-                if math.hypot((x - ox + wrap) * aspect, y - oy) < margin:
-                    return False
-    return True
+FRONT = 0.25
+
+COMPOSITION = (
+    (FRONT - 0.035, 0.86, 0.32, 2.0, 0.024, 0.0, ((0.42, -1),)),
+    (FRONT + 0.05, 0.58, -0.22, -1.8, 0.017, 0.65, ()),
+    (FRONT - 0.13, 0.34, -0.30, -2.3, 0.014, 0.35, ()),
+    (FRONT + 0.15, 0.48, 0.38, 2.2, 0.019, 0.15, ((0.5, 1),)),
+    (FRONT + 0.40, 0.72, 0.28, 1.9, 0.021, 0.2, ((0.45, -1),)),
+    (FRONT + 0.58, 0.40, -0.35, -2.1, 0.015, 0.55, ()),
+)
 
 
 def strokes(rng, aspect):
     shapes = []
-    placed = []
-    count = 9
-    for k in range(count):
-        width = rng.uniform(0.012, 0.026)
-        for _ in range(60):
-            s0 = (k + rng.uniform(-0.25, 0.25)) / count
-            side = rng.choice((-1, 1))
-            stem = brush_path(rng, s0, 1.0, -math.pi / 2 + side * rng.uniform(0.1, 0.3),
-                              rng.uniform(0.7, 0.92), side * rng.uniform(0.2, 0.5), aspect,
-                              curl=side * rng.uniform(1.4, 2.4))
-            if clear_of(stem, placed, 0.1, aspect):
-                break
-        else:
-            continue
-        shapes.append((brush_outline(rng, stem, width, aspect), rng.uniform(0.82, 0.95)))
-        own = list(stem[::4])
-        for _ in range(rng.randint(1, 2)):
-            for _ in range(30):
-                j = rng.randrange(len(stem) // 4, int(len(stem) * 0.7))
-                x, y = stem[j]
-                xa, ya = stem[j - 2]
-                xb, yb = stem[j + 2]
-                along = math.atan2(yb - ya, (xb - xa) * aspect)
-                side = rng.choice((-1, 1))
-                shoot = brush_path(rng, x, y, along + side * rng.uniform(0.5, 0.9), rng.uniform(0.14, 0.26),
-                                   side * rng.uniform(0.6, 1.2), aspect, steps=120,
-                                   curl=side * rng.uniform(2.0, 3.5))
-                if clear_of(shoot, placed, 0.07, aspect) and clear_of(shoot, own, 1.6 * width, aspect, skip=55):
-                    shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), rng.uniform(0.75, 0.9)))
-                    own += shoot[::4]
-                    break
-        placed += own
-    return shapes
+    for s0, length, lean, curl, width, depth, shoots in COMPOSITION:
+        stem = brush_path(rng, s0, 1.0, -math.pi / 2 + lean * 0.4, length, lean, aspect, curl=curl)
+        shapes.append((brush_outline(rng, stem, width, aspect), depth))
+        for at, side in shoots:
+            j = int(len(stem) * at)
+            x, y = stem[j]
+            xa, ya = stem[j - 2]
+            xb, yb = stem[j + 2]
+            along = math.atan2(yb - ya, (xb - xa) * aspect)
+            shoot = brush_path(rng, x, y, along + side * 0.75, length * 0.3, side * 0.9, aspect, steps=120,
+                               curl=side * 2.6)
+            shapes.append((brush_outline(rng, shoot, width * 0.6, aspect), depth))
+    return sorted(shapes, key=lambda shape: -shape[1])
 
 
 def main():
@@ -112,8 +95,11 @@ def main():
     aspect = width / height
     big_w, big_h = width * SUPERSAMPLE, height * SUPERSAMPLE
     rng = random.Random(1975)
-    ink = np.zeros((big_h, big_w), dtype=np.float32)
-    for shape, density in strokes(rng, aspect):
+    load = np.asarray(Image.effect_noise((big_w // 64 + 1, big_h // 64 + 1), 60).resize((big_w, big_h), Image.BICUBIC),
+                      dtype=np.float32) / 255
+    paint = WASH[None, None, :] + (SCARLET - WASH)[None, None, :] * np.clip(0.35 + load, 0, 1)[..., None]
+    colour = np.broadcast_to(PORCELAIN, (big_h, big_w, 3)).copy()
+    for shape, depth in strokes(rng, aspect):
         for offset in (-1.0, 0.0, 1.0):
             pts = [((x + offset) * big_w, y * big_h) for x, y in shape]
             x0 = max(int(min(p[0] for p in pts)) - 4, 0)
@@ -125,13 +111,9 @@ def main():
             mask = Image.new("L", (x1 - x0, y1 - y0), 0)
             ImageDraw.Draw(mask).polygon([(x - x0, y - y0) for x, y in pts], fill=255)
             mask = mask.filter(ImageFilter.GaussianBlur(SUPERSAMPLE * 0.9))
-            a = np.asarray(mask, dtype=np.float32) / 255 * density
-            region = ink[y0:y1, x0:x1]
-            ink[y0:y1, x0:x1] = np.maximum(region, a)
-    load = np.asarray(Image.effect_noise((big_w // 64 + 1, big_h // 64 + 1), 60).resize((big_w, big_h), Image.BICUBIC),
-                      dtype=np.float32) / 255
-    paint = WASH[None, None, :] + (SCARLET - WASH)[None, None, :] * np.clip(0.35 + load, 0, 1)[..., None]
-    colour = PORCELAIN[None, None, :] * (1 - ink[..., None]) + paint * ink[..., None]
+            a = (np.asarray(mask, dtype=np.float32) / 255 * (0.95 - 0.4 * depth))[..., None]
+            ink = paint[y0:y1, x0:x1] * (1 - 0.55 * depth) + PORCELAIN * 0.55 * depth
+            colour[y0:y1, x0:x1] = colour[y0:y1, x0:x1] * (1 - a) + ink * a
     image = Image.fromarray((np.clip(colour, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB")
     image = image.resize((width, height), Image.LANCZOS)
     image.save(out, compression="tiff_lzw")

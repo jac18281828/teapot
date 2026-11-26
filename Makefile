@@ -3,7 +3,7 @@ RENDERER ?= gmanpathtracer
 FORMAT ?= png
 TEXRES ?= 8192
 SHOTS := $(notdir $(wildcard shots/*))
-TIFS := $(wildcard assets/*/tex/*.tif)
+TIFS := $(filter-out assets/teapot/tex/tendrils.tif,$(wildcard assets/*/tex/*.tif))
 TEXS := $(patsubst %.tif,build/tex/%.tex,$(notdir $(TIFS))) build/tex/tendrils.tex
 
 vpath %.tif $(sort $(dir $(TIFS)))
@@ -18,9 +18,16 @@ all: tex
 
 tex: $(TEXS)
 
+PAINTED := $(wildcard assets/teapot/tex/tendrils.tif)
+ifeq ($(PAINTED),)
 build/tex/tendrils.tif: tools/tendrils.py
 	@mkdir -p build/tex
 	python3 -I tools/tendrils.py $(TEXRES) $@
+else
+build/tex/tendrils.tif: $(PAINTED)
+	@mkdir -p build/tex
+	cp $< $@
+endif
 
 build/tex/%.tex: build/tex/%.tif
 	printf 'MakeTexture "%s" "%s" "periodic" "clamp" "box" 1 1\n' $< $@ > build/tex/$*.rib
