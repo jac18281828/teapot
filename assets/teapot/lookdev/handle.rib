@@ -1,6 +1,11 @@
 AttributeBegin
 Attribute "identifier" "name" ["handle"]
 Color [0.96 0.96 0.94]
-Surface "plastic" "Ka" [0.6] "Kd" [0.7] "Ks" [0.3] "roughness" [0.015]
+Surface "plastic" "Ka" [0.6] "Kd" [0.7] "Ks" [0.3] "roughness" [0.001]
 ReadArchive "../geo/handle.rib"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "name" ["handle_glaze"]
+Surface "glass" "float eta" [1.5] "Kr" [1] "float Kt" [1]
+ReadArchive "../../../build/glaze/handle.rib"
 AttributeEnd

@@ -27,7 +27,7 @@ avoids overwriting prior versions.
 | Path | Holds |
 |---|---|
 | `assets/teapot/teapot.rib` | The asset's entry: every part with its look, two-sided |
-| `assets/teapot/lookdev/<part>.rib` | One part's material, bound to its geometry |
+| `assets/teapot/lookdev/<part>.rib` | One part's material, bound to its geometry, under a glass glaze shell |
 | `assets/teapot/geo/<part>.rib` | One `PointsPolygons` of triangles with `"P"`, vertex `"N"` and `"st"` |
 | `assets/teapot/teapot_tall.rib` | The teapot at the physical teapot's height, 4/3 of Blinn's |
 | `assets/museum/museum.rib` | The museum display: cherry frame and plinth, marble border, glass lightbox, acrylic case and its rail |
@@ -36,7 +36,7 @@ avoids overwriting prior versions.
 | `lights/studio.rib` | The light rig |
 | `shots/<shot>/shot.rib` | Camera, format, samples and what the shot reads |
 | `docs/museum.png` | The museum shot, a 2048 x 1536 copy of the 4096 x 3072 render at 1024 samples |
-| `tools/` | `render.sh` |
+| `tools/` | `render.sh`; `glaze.py`, which writes each part's glaze shell to `build/glaze/`, `GLAZE` (0.015) out along `"N"` |
 | `tests/` | `unittest` suites: `python3 -I -m unittest discover -s tests -v` |
 | `AGENTS.md` | The project's facts, workflow and completion gates |
 

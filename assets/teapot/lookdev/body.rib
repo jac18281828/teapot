@@ -1,7 +1,12 @@
 AttributeBegin
 Attribute "identifier" "name" ["body"]
 Color [1 1 1]
-Surface "paintedplastic" "Ka" [0.6] "Kd" [0.7] "Ks" [0.3] "roughness" [0.015]
+Surface "paintedplastic" "Ka" [0.6] "Kd" [0.7] "Ks" [0.3] "roughness" [0.001]
   "texturename" ["build/tex/tendrils.tex"]
 ReadArchive "../geo/body.rib"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "name" ["body_glaze"]
+Surface "glass" "float eta" [1.5] "Kr" [1] "float Kt" [1]
+ReadArchive "../../../build/glaze/body.rib"
 AttributeEnd
