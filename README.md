@@ -5,7 +5,7 @@ A RenderMan project for the Utah teapot, rendered with
 
 ![Utah Teapot on display in Mountain View](docs/museum.png)
 
-*Utah Teapot on display in Mountain View.*
+*Utah Teapot on display in Mountain View. Path traced, GMAN, 2026*
 
 ## Render
 
