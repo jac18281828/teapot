@@ -71,14 +71,12 @@ holmes3d.net.
 The museum textures are CC0 scans from [ambientCG](https://ambientcg.com): `Marble020` for the
 border and `Wood067` for the frame, each its 2K colour and DirectX normal map converted to TIFF.
 
-## Known gman defects
+## gman version
 
-- gman 1.3.1 emits light only from `Sphere` and `Disk`. The museum's lightbox is one polygon area
-  light, which needs gman `main` at `86ef3c1` or later until the next release; the ray tracer lights
-  from area emitters from `c3d424f`. 1.3.1 skips the
-  panel with a warning, `area-light primitive(s) are ineligible or unsupported`, and renders the
-  floor unlit; `tools/render.sh` passes either build, since its floor is 1.3.1.
+The museum shot needs gman 1.4.0 or later: polygon area lights, the ray tracer's area-light
+sampling, translucent panes seen through glass, and the glass `Kr`, `Kt` and `eta` parameters. The
+released 1.3.1 skips the lightbox's emitters with a warning and renders the floor unlit. The
+renders in this README came from the gman `main` build at `e7aad7d`, which became 1.4.0.
 
-- gman 1.3.1 builds nothing for `Patch`: `GMANRayObjectManager::getRSPatch` returns an empty
-  primitive. The import tessellates the patches into `PointsPolygons` instead.
 - The path tracer skips `ambientlight`, so `lights/studio.rib`'s ambient light adds nothing there.
+- The import tessellates the patches into `PointsPolygons`; gman 1.3.1 builds nothing for `Patch`.
