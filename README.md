@@ -1,11 +1,10 @@
 # Teapot
 
-A RenderMan project for the Utah teapot, rendered with
-[gman](https://github.com/jac18281828/gman). The RIB files under `assets/` are the masters.
+A RenderMan project for the Utah teapot
 
 ![Utah Teapot on display in Mountain View](docs/museum.png)
 
-*Utah Teapot on display in Mountain View. Path traced, GMAN, 2026*
+*Utah teapot on display in Mountain View. Path traced, [gman](https://github.com/jac18281828/gman), 2026*
 
 ## Render
 
@@ -20,8 +19,8 @@ GMAN=/path/to/gman make shot=full         # gman on PATH by default
 FORMAT=tiff make shot=full                # png by default; needs that driver in gman
 ```
 
-A render does not overwrite an earlier version. `tools/render.sh` writes a new
-frame RIB under `build/frames/`.
+Render, `tools/render.sh` writes a new frame RIB under `build/frames/` this
+avoids overwriting prior versions.
 
 ## Layout
 
