@@ -1,27 +1,38 @@
 #!/bin/bash
-# Render one shot into the next free version: renders/<shot>/<shot>_vNNN.<format>.
-# usage: tools/render.sh SHOT [RENDERER [FORMAT]]   (run from the project root; GMAN names the binary)
+# usage: tools/render.sh SHOT [RENDERER [FORMAT]]
+# Renders shots/SHOT into the next free renders/SHOT/SHOT_vNNN.FORMAT. Run from the project root.
 set -euo pipefail
+
 shot=$1
 renderer=${2:-gmanpathtracer}
 format=${3:-png}
 gman=${GMAN:-gman}
-[ -f "shots/$shot/shot.rib" ] || { echo "no shot: shots/$shot/shot.rib" >&2; exit 1; }
-info=$("$gman" --version)
-banner=${info%%$'\n'*}
-[[ $banner =~ ^gman\ ([0-9]+)\.([0-9]+)\.([0-9]+) ]] &&
-  { major=$((10#${BASH_REMATCH[1]})); minor=$((10#${BASH_REMATCH[2]})); patch=$((10#${BASH_REMATCH[3]}))
-    (( major > 1 || (major == 1 && (minor > 3 || (minor == 3 && patch >= 1))) )); } ||
-  { echo "$gman reports \"$banner\"; Teapot needs gman 1.3.1 or later" >&2; exit 1; }
-drivers=$(grep '^drivers:' <<< "$info" || true)
-grep -qw "$format" <<< "${drivers#drivers:}" ||
-  { echo "$gman has no $format driver ($drivers)" >&2; exit 1; }
+
+if [ ! -f "shots/$shot/shot.rib" ]; then
+    echo "no shot: shots/$shot/shot.rib" >&2
+    exit 1
+fi
+
+if ! "$gman" --version | grep '^drivers:' | grep -qw "$format"; then
+    echo "$gman has no $format driver" >&2
+    exit 1
+fi
+
 mkdir -p "renders/$shot" build/frames
-n=1
-while compgen -G "$(printf 'renders/%s/%s_v%03d.*' "$shot" "$shot" "$n")" > /dev/null; do n=$((n + 1)); done
-out=$(printf 'renders/%s/%s_v%03d.%s' "$shot" "$shot" "$n" "$format")
-frame=$(printf 'build/frames/%s_v%03d.rib' "$shot" "$n")
-printf 'Display "%s" "file" "rgba"\nReadArchive "../../shots/%s/shot.rib"\n' "$out" "$shot" > "$frame"
+
+version=1
+while compgen -G "renders/$shot/${shot}_v$(printf '%03d' "$version").*" > /dev/null; do
+    version=$((version + 1))
+done
+name="${shot}_v$(printf '%03d' "$version")"
+output="renders/$shot/$name.$format"
+frame="build/frames/$name.rib"
+
+cat > "$frame" <<RIB
+Display "$output" "file" "rgba"
+ReadArchive "../../shots/$shot/shot.rib"
+RIB
+
 start=$(date +%s)
 "$gman" -r "$renderer" "$frame"
-echo "$out ($renderer, $(( $(date +%s) - start )) s)"
+echo "$output ($renderer, $(($(date +%s) - start)) s)"

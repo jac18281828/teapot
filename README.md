@@ -21,8 +21,8 @@ FORMAT=tiff make shot=full                # png by default; needs that driver in
 ```
 
 A render never overwrites an earlier version. `tools/render.sh` writes a frame RIB under
-`build/frames/` that names the output and reads the shot, and stops before rendering when gman is
-older than 1.3.1 or lacks the format's driver. Versions count across formats.
+`build/frames/` that names the output and reads the shot, and stops before rendering when gman
+lacks the format's driver. Versions count across formats.
 
 ## Layout
 

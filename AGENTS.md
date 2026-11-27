@@ -15,8 +15,8 @@ the layout, the conventions and how to render.
 - **Agenda:** `~/OneDrive/Documents/org/teapot.org`. The orchestrator owns it; an executor edits no
   agenda.
 - **Machine:** the owner's workstation, where gman and a CPU for path-traced renders live.
-- **gman:** `gman` on `PATH`, release 1.3.1 or later from the GitHub release archive, installed to
-  `/usr/local`; `GMAN=<path>` overrides it. `tools/render.sh` refuses an older gman.
+- **gman:** `gman` on `PATH`, release 1.4.0 or later from the GitHub release archive, installed to
+  `/usr/local`; `GMAN=<path>` overrides it.
 - **Python:** `python3` with `numpy`, always run with `-I`; no other dependency.
 
 ## Workflow
