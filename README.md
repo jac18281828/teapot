@@ -3,6 +3,10 @@
 A RenderMan render project for the Utah teapot, rendered with
 [gman](https://github.com/jac18281828/gman). The RIB files under `assets/` are the masters.
 
+![Utah Teapot on display in Mountain View](docs/museum.png)
+
+*Utah Teapot on display in Mountain View.*
+
 ## Render
 
 Run every command from this directory.
@@ -33,6 +37,7 @@ older than 1.3.1 or lacks the format's driver. Versions count across formats.
 | `assets/museum/tex/` | Master TIFFs: `<map>_diff` colour, `<map>_nrm` normal (DirectX convention) |
 | `lights/studio.rib` | The light rig |
 | `shots/<shot>/shot.rib` | Camera, format, samples and what the shot reads |
+| `docs/museum.png` | The museum shot, a 2048 x 1536 copy of the 4096 x 3072 render at 1024 samples |
 | `tools/` | `render.sh` |
 | `tests/` | `unittest` suites: `python3 -I -m unittest discover -s tests -v` |
 | `AGENTS.md` | The project's facts, workflow and completion gates |
