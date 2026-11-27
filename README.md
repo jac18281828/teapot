@@ -1,6 +1,6 @@
 # Teapot
 
-A RenderMan render project for the Utah teapot, rendered with
+A RenderMan project for the Utah teapot, rendered with
 [gman](https://github.com/jac18281828/gman). The RIB files under `assets/` are the masters.
 
 ![Utah Teapot on display in Mountain View](docs/museum.png)
@@ -9,7 +9,7 @@ A RenderMan render project for the Utah teapot, rendered with
 
 ## Render
 
-Run every command from this directory.
+Example commands:
 
 ```sh
 make shot=full                            # next renders/full/full_vNNN.png
@@ -20,9 +20,8 @@ GMAN=/path/to/gman make shot=full         # gman on PATH by default
 FORMAT=tiff make shot=full                # png by default; needs that driver in gman
 ```
 
-A render never overwrites an earlier version. `tools/render.sh` writes a frame RIB under
-`build/frames/` that names the output and reads the shot, and stops before rendering when gman
-lacks the format's driver. Versions count across formats.
+A render does not overwrite an earlier version. `tools/render.sh` writes a new
+frame RIB under `build/frames/`.
 
 ## Layout
 
@@ -41,11 +40,7 @@ lacks the format's driver. Versions count across formats.
 | `tools/` | `render.sh` |
 | `tests/` | `unittest` suites: `python3 -I -m unittest discover -s tests -v` |
 | `AGENTS.md` | The project's facts, workflow and completion gates |
-| `build/`, `renders/` | Generated; not tracked |
 
-Parts, by 1-based patch index in the source's file order: `body` 1-12 (rim and body), `handle` 13-16,
-`spout` 17-20, `lid` 21-28, `bottom` 29-32. A shot that wants a subset reads `lookdev/<part>.rib`
-files directly.
 
 ## Conventions
 
@@ -61,22 +56,22 @@ files directly.
 
 ## Credit
 
-The data is the Utah teapot, from `teapotCGA.bpt`: the 32 bicubic Bezier patches Frank Crow
-published in IEEE Computer Graphics and Applications in January 1987, as digitized by
-holmes3d.net.
+The data is from the Utah teapot, base file `teapotCGA.bpt`: the 32 bicubic Bezier patches Frank Crow
+published in IEEE Computer Graphics and Applications in January 1987.
+
+Digitized here:
 
 - URL: `http://www.holmes3d.net/graphics/teapot/teapotCGA.bpt`
 - sha256: `83c3cf09ff33cff17b8de714836c4c6758fccfc4288cef8671bacf0b7c294953`
 
 The museum textures are CC0 scans from [ambientCG](https://ambientcg.com): `Marble020` for the
-border and `Wood067` for the frame, each its 2K colour and DirectX normal map converted to TIFF.
+border and `Wood067` for the frame, each its 2K colour and DirectX normal map is
+converted to TIFF.
 
 ## gman version
 
 The museum shot needs gman 1.4.0 or later: polygon area lights, the ray tracer's area-light
-sampling, translucent panes seen through glass, and the glass `Kr`, `Kt` and `eta` parameters. The
-released 1.3.1 skips the lightbox's emitters with a warning and renders the floor unlit. The
-renders in this README came from the gman `main` build at `e7aad7d`, which became 1.4.0.
+sampling, translucent panes seen through glass, and the glass `Kr`, `Kt` and `eta` parameters. 
 
 - The path tracer skips `ambientlight`, so `lights/studio.rib`'s ambient light adds nothing there.
 - The import tessellates the patches into `PointsPolygons`; gman 1.3.1 builds nothing for `Patch`.
